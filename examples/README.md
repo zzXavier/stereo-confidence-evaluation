@@ -1,0 +1,1 @@
+`python run.py demo` fetches the Motorcycle pair and computes fresh SGBM and RAFT predictions. `results/comparison.png` shows the first held-out scene.

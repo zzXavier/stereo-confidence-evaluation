@@ -1,9 +1,5 @@
-# P10 交接记录
+# P10 handoff
 
-当前阶段：上游版本已固定，正式验收待完成。
+Run `cpu-384w-12iter` completed. Weights are the authors' SceneFlow-only checkpoint. The Motorcycle demo and three held-out scenes ran in both directions. Two regression tests covered right-view warping and the Middlebury PFM scale convention.
 
-最近已核实：项目远端以及 UPSTREAM.md 中的源码提交。
-
-待执行：运行上游入口 evaluate_stereo.py ，保存日志，再按项目 README 的实验目标添加留出集对照。
-
-验收要求：从干净克隆运行演示与正式基线，使用保存的预测重建结果，涉及训练则测试权重重载。
+Latest commands: `python run.py demo`, `python run.py reproduce`, `python run.py evaluate`. Next check: `python run.py evaluate` in the repository, or `python run.py reproduce --out scratch/fresh` for independent inference. Retain the input manifest before changing scene and resolution. The README documents the limits of all three region masks.
