@@ -96,6 +96,34 @@ def masks(left, truth, right_truth):
             "occlusion_proxy":off_image | (np.isfinite(residual) & (residual>1.0))}
 
 
+def coverage_plot(records, out):
+    scenes = sorted({r[0] for r in records})
+    width, height = 255, 210
+    chart = Image.new("RGB", (width*len(scenes), height+25), "white")
+    draw = ImageDraw.Draw(chart)
+    draw.text((10,4), "EPE in pixels versus retained fraction of all valid ground-truth pixels", fill="black")
+    colors = {"sgbm":"#b25c26", "raft":"#176b83"}
+    for panel,scene in enumerate(scenes):
+        left, right = panel*width+38, (panel+1)*width-16
+        top, bottom = 55, 185
+        draw.text((left,29),scene,fill="black")
+        rows=[r for r in records if r[0]==scene and r[2]=="all" and r[7]!=""]
+        maxerr=max(1.,float(np.ceil(max(r[7] for r in rows)*2)/2))
+        for i in range(3):
+            y=bottom-i*(bottom-top)/2
+            draw.line((left,y,right,y),fill="#dedede")
+            draw.text((left-32,y-5),f"{maxerr*i/2:.1f}",fill="#333333")
+            x=left+i*(right-left)/2
+            draw.text((x-8,bottom+3),f"{i/2:.1f}",fill="#333333")
+        for idx,(method,color) in enumerate(colors.items()):
+            seq=sorted((r[6],r[7]) for r in rows if r[1]==method)
+            pts=[(left+x*(right-left),bottom-y/maxerr*(bottom-top)) for x,y in seq]
+            draw.line(pts,fill=color,width=2)
+            for x,y in pts: draw.ellipse((x-2,y-2,x+2,y+2),fill=color)
+            draw.text((left+idx*70,207),method.upper(),fill=color)
+    chart.save(out/"coverage.png")
+
+
 def evaluate(out):
     records = []
     for file in sorted(out.glob("*.npz")):
@@ -119,6 +147,7 @@ def evaluate(out):
         raise FileNotFoundError("Generate predictions with reproduce first")
     with (out/"metrics.csv").open("w",newline="") as f:
         w = csv.writer(f); w.writerow(["scene","method","region","max_lr_px","valid_gt","retained","coverage","epe_px","bad1"]); w.writerows(records)
+    coverage_plot(records,out)
     print(out/"metrics.csv")
 
 
