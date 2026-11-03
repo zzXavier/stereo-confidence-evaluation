@@ -22,6 +22,8 @@ Python 3.11, Git and an internet connection are required for first-time setup. T
 
 EPE is measured in pixels at the evaluation width of 384 pixels. Each method is scored on its valid predictions, and the CSV includes coverage against all valid ground-truth pixels. With no extra filtering SGBM covered 79.1–81.3% and RAFT covered 100%. The one-pixel consistency rule retains fewer pixels as it lowers error in all three scenes.
 
+![Error versus retained coverage across the three held-out scenes](results/coverage.png)
+
 ## How the experiment works
 
 - `src/fetch.py` verifies the upstream source revision and the SHA-256 of all inputs. [Upstream and data](UPSTREAM.md). The SceneFlow-only checkpoint avoids using the Middlebury-finetuned model.
