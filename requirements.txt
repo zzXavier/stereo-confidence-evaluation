@@ -1,0 +1,6 @@
+torch==2.4.1
+numpy==2.3.3
+scipy==1.17.1
+opencv-python-headless==4.10.0.84
+Pillow==11.3.0
+opt-einsum==3.4.0
